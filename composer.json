@@ -1,0 +1,26 @@
+{
+    "name": "h1ch4m/multi-lang",
+    "description": "laravel multi language manager",
+    "type": "library",
+    "license": "MIT",
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "require": {
+        "h1ch4m/multi-lang": "dev-main"
+    },
+    "autoload": {
+        "psr-4": {
+            "H1ch4m\\MultiLang\\": "src/"
+        },
+        "files": [
+            "src/helpers.php"
+        ]
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "H1ch4m\\MultiLang\\MultiLangServiceProvider"
+            ]
+        }
+    }
+}
