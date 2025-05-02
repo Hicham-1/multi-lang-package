@@ -10,26 +10,28 @@ A multi language solution for Laravel applications with database-driven translat
 
 - [H1ch4m/MultiLang 🌐](#h1ch4mmultilang-)
 - [Table of Contents](#table-of-contents)
-- [Features ✨](#features-)
-- [Requirements 📋](#requirements-)
-- [Installation ⚙️](#installation-️)
+- [✨ Features](#-features)
+- [📋 Requirements](#-requirements)
+- [⚙️ Installation](#️-installation)
   - [Config files](#config-files)
   - [Migrations](#migrations)
   - [Views](#views)
   - [Routes](#routes)
-- [Configuration ⚙️](#configuration-️)
+- [⚙️ Configuration](#️-configuration)
   - [Config Files](#config-files-1)
-- [Advanced Usage 🔧](#advanced-usage-)
+- [🔧 Advanced Usage](#-advanced-usage)
   - [Custom route](#custom-route)
     - [if you published the routes](#if-you-published-the-routes)
     - [if you want to use package routes](#if-you-want-to-use-package-routes)
-- [Helpers 🧰](#helpers-)
+- [🧰 Helpers](#-helpers)
   - [Available helper functions](#available-helper-functions)
-- [Navigation](#navigation)
-- [Middleware](#middleware)
-- [Service Provider](#service-provider)
+- [🗺️ Navigation](#️-navigation)
+- [🚧 Middleware](#-middleware)
+- [📄 Service Provider](#-service-provider)
+- [📖 Model Setup Example](#-model-setup-example)
+- [🎓 License](#-license)
 
-# Features ✨
+# ✨ Features
 
 - 🗃️ Database-driven language management
 - 🌍 Automatic language detection middleware
@@ -42,7 +44,7 @@ A multi language solution for Laravel applications with database-driven translat
 - 🔌 Event system integration
 - 🧩 Modular architecture
 
-# Requirements 📋
+# 📋 Requirements
 
 - PHP 8.0+
 - Laravel 9.x or later
@@ -50,7 +52,7 @@ A multi language solution for Laravel applications with database-driven translat
 - Composer
 - Database (MySQL)
 
-# Installation ⚙️
+# ⚙️ Installation
 
 1. Install via Composer:
 ```bash
@@ -88,7 +90,7 @@ php artisan vendor:publish --tag=routes --provider="H1ch4m\MultiLang\MultiLangSe
 php artisan migrate
 ```
 
-# Configuration ⚙️
+# ⚙️ Configuration
 
 ## Config Files
 
@@ -129,7 +131,7 @@ return [
 
 ```
 
-# Advanced Usage 🔧
+# 🔧 Advanced Usage
 ## Custom route
 ### if you published the routes
 ```php
@@ -144,7 +146,7 @@ Route::group(['prefix' => 'panel', 'as' => 'panel.'], function () {
 });
 ```
 
-# Helpers 🧰
+# 🧰 Helpers
 ## Available helper functions
 ```php
 // Get active languages
@@ -156,7 +158,7 @@ getDefaultLanguage(): string
 // Get or Set location (see 'Service Provider' section)
 getOrSetCachedLocale($localeLang = null): string
 ```
-# Navigation
+# 🗺️ Navigation
 
 ```html
     <li class="pc-item">
@@ -177,7 +179,7 @@ getOrSetCachedLocale($localeLang = null): string
         </a>
     </li>
 ```
-# Middleware
+# 🚧 Middleware
 
 in your frontend (Store, Blog...) use this middleware ```'h1ch4m_middleware'```
 ```php
@@ -186,7 +188,7 @@ Route::middleware(['h1ch4m_middleware'])->group(function () {
 });
 ```
 
-# Service Provider
+# 📄 Service Provider
 
  in your service provider add it if you are using ```spatie/laravel-translatable```, you will not need to call getTranslation or setTranslation (the language will add automatically)
 
@@ -206,3 +208,50 @@ class AppServiceProvider extends ServiceProvider
     }
 }
 ```
+
+# 📖 Model Setup Example
+
+your Model should be look like this
+
+```php
+<?php
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+use Spatie\Translatable\HasTranslations;
+
+class Program extends Model
+{
+    use HasTranslations;
+
+    public $translatable = ['title', 'body', 'features'];
+    public $input_type = ['text', 'editor', 'array'];
+    public $custom_name = 'Program';
+    public $default_title = 'title';
+
+    // if the Model has parent (just to group programs by events)
+    public $parent_method = 'event';
+
+
+    protected $table = 'programs';
+
+    protected $fillable = [
+        'event_id',
+        'title',
+        'body',
+        'features',
+        'is_active',
+        'is_pinned'
+    ];
+
+    public function event()
+    {
+        return $this->belongsTo(Event::class, 'event_id');
+    }
+}
+```
+
+
+# 🎓 License
+
+This package is open-sourced software licensed under the [MIT license](LICENSE.md).
