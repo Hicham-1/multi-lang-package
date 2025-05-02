@@ -27,6 +27,7 @@ A multi language solution for Laravel applications with database-driven translat
   - [Available helper functions](#available-helper-functions)
 - [Navigation](#navigation)
 - [Middleware](#middleware)
+- [Service Provider](#service-provider)
 
 # Features ✨
 
@@ -116,6 +117,18 @@ return [
 ];
 ```
 
+3. ```app.php``` - add locale and fallback language
+
+```php
+return [
+    // your other configs
+
+    'locale' => env('APP_LOCALE', 'en'),
+    'fallback_locale' => env('APP_FALLBACK_LOCALE', 'en')
+]
+
+```
+
 # Advanced Usage 🔧
 ## Custom route
 ### if you published the routes
@@ -135,7 +148,13 @@ Route::group(['prefix' => 'panel', 'as' => 'panel.'], function () {
 ## Available helper functions
 ```php
 // Get active languages
-getActiveLanguages()
+getActiveLanguages(): array
+
+// Get default language
+getDefaultLanguage(): string
+
+// Get or Set location (see 'Service Provider' section)
+getOrSetCachedLocale($localeLang = null): string
 ```
 # Navigation
 
@@ -165,4 +184,25 @@ in your frontend (Store, Blog...) use this middleware ```'h1ch4m_middleware'```
 Route::middleware(['h1ch4m_middleware'])->group(function () {
     Route::get('/your-path', [YourBlogController::class, 'method']);
 });
+```
+
+# Service Provider
+
+ in your service provider add it if you are using ```spatie/laravel-translatable```, you will not need to call getTranslation or setTranslation (the language will add automatically)
+
+```php
+class AppServiceProvider extends ServiceProvider
+{
+    public function register(): void
+    {
+
+    }
+
+    public function boot(): void
+    {
+        if (Request::is('panel/*')) {
+            Config::set('app.locale', getOrSetCachedLocale());
+        }
+    }
+}
 ```

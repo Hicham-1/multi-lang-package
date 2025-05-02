@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         if (Schema::hasTable('multi_languages')) {
-            echo "⛔ Table 'multi_languages' already exists. Skipping migration.\n";
+            echo "\n⛔ Table 'multi_languages' already exists. Skipping migration.\n";
             return;
         }
 

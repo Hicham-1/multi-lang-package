@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\URL;
 use H1ch4m\MultiLang\models\MultiLanguagesModel;
+use Illuminate\Support\Facades\Cache;
 
 class FrontLanguage
 {
@@ -19,7 +20,7 @@ class FrontLanguage
      */
     public function handle(Request $request, Closure $next)
     {
-        $default_language = MultiLanguagesModel::firstWhere('is_default', true)->language ?? 'fr';
+        $default_language = Cache::get('app_locale');
         App::setFallbackLocale($default_language);
 
 

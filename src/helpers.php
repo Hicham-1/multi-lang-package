@@ -1,7 +1,10 @@
 <?php
 
+use H1ch4m\MultiLang\models\MultiLanguagesModel;
+use Illuminate\Support\Facades\Cache;
+
 if (!function_exists('getActiveLanguages')) {
-    function getActiveLanguages()
+    function getActiveLanguages(): array
     {
         $languages = config('h1ch4m_languages');
 
@@ -30,5 +33,30 @@ if (!function_exists('getActiveLanguages')) {
         });
 
         return $activeLanguages;
+    }
+}
+
+
+if (!function_exists('getDefaultLanguage')) {
+    function getDefaultLanguage(): string
+    {
+        $default_language = Cache::get('app_locale') ?? MultiLanguagesModel::firstWhere('is_default', true)->language ?? config('app.locale');
+
+        return $default_language;
+    }
+}
+
+
+if (!function_exists('getOrSetCachedLocale')) {
+    function getOrSetCachedLocale($localeLang = null): string
+    {
+        $locale = Cache::get('app_locale');
+
+        if (!$locale || $localeLang) {
+            $locale =  $localeLang ?? $locale ?? getDefaultLanguage();
+            Cache::forever('app_locale', $locale);
+        }
+
+        return $locale;
     }
 }
