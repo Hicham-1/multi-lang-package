@@ -1,6 +1,20 @@
 @if (config('h1ch4m_config.layout'))
     @extends(config('h1ch4m_config.layout'))
 
+
+    @section(config('h1ch4m_config.custom_style'))
+        <style>
+            .array-wrapper .array-container {
+                transition: opacity 0.3s ease, transform 0.3s ease;
+            }
+
+            .array-wrapper .array-container.new {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+        </style>
+    @endsection
+
     @section(config('h1ch4m_config.custom_content'))
         @if (session('success'))
             <div class="alert alert-success">
@@ -40,28 +54,28 @@
                 <div class="card-body">
                     <div>{{ $full_default_language }}</div>
                     <br>
-                    @foreach ($translatable as $key => $column)
+                    @foreach ($translatableInputs as $column => $columnInfo)
                         <label class="mt-3 fw-bold">{{ ucfirst(str_replace('_', ' ', $column)) }}</label>
-
-                        @if ('array' == $input_type[$key])
+                        <br>
+                        @if ('array' == $columnInfo['type'])
                             @php
                                 $array_data = $item->getTranslation($column, $default_language, false);
                             @endphp
 
                             @if (is_array($array_data))
                                 @foreach ($array_data as $key => $data)
-                                    <div class="mt-3">
-                                        <strong>Title:</strong> {{ $data['title'] ?? '' }}
-                                        @if ($column === 'programs')
-                                            <br>
-                                            <strong>Body:</strong> {{ $data['body'] ?? '' }}
-                                        @endif
-                                    </div>
+                                    @foreach ($data as $title => $value)
+                                        <div class="mt-3 ms-3">
+                                            <strong>{{ ucfirst($title) }}</strong>
+                                            <p>{{ $value ?? '' }}</p>
+                                        </div>
+                                    @endforeach
+                                    <hr width="50%">
                                 @endforeach
                             @endif
                         @else
                             <div>
-                                {!! $item->getTranslation($column, $default_language, false) !!}
+                                {!! $item->getTranslation($column, $default_language, false) ?? '---' !!}
                             </div>
                         @endif
                     @endforeach
@@ -79,66 +93,90 @@
                 <div class="card-body">
                     <div>{{ $full_language }}</div>
                     <br>
-                    @foreach ($translatable as $key => $column)
+                    @foreach ($translatableInputs as $column => $columnInfo)
                         <label for="{{ $column }}"
                             class="mt-3">{{ ucfirst(str_replace('_', ' ', $column)) }}</label>
 
-                        @if ('text' == $input_type[$key])
+                        @if ('text' == $columnInfo['type'])
                             <input class="form-control" id="{{ $column }}"
                                 name="data[{{ $column }}][{{ $item->id }}]"
                                 value="{{ $item->getTranslation($column, $language, false) }}">
-                        @elseif ('textarea' == $input_type[$key])
+                        @elseif ('textarea' == $columnInfo['type'])
                             <textarea name="data[{{ $column }}][{{ $item->id }}]" class="form-control" placeholder="Content of body">{{ $item->getTranslation($column, $language, false) }}</textarea>
-                        @elseif ('editor' == $input_type[$key])
+                        @elseif ('editor' == $columnInfo['type'])
                             <textarea id="pc-tinymce" name="data[{{ $column }}][{{ $item->id }}]" class="form-control textarea"
                                 placeholder="Content of body">{{ $item->getTranslation($column, $language, false) }}</textarea>
-                        @elseif ('array' == $input_type[$key])
-                            <div class="card-header">
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <button type="button" class="btn btn-light-primary"
-                                        onclick="addItem('{{ $item->id }}', '{{ $column }}')"> Add
-                                        {{ ucfirst($column) }}
-                                    </button>
+                        @elseif ('array' == $columnInfo['type'])
+                            <button type="button" class="btn btn-outline-primary ms-3 my-3"
+                                onclick="addItem('{{ $column }}')">
+                                <i class="fas fa-plus-circle"></i> Add {{ ucfirst($column) }}
+                            </button>
+
+                            <div class="array-wrapper {{ $column }}">
+                                <div class="d-none">
+                                    <div class="card array-container {{ $column }} mb-4 p-3 border shadow-sm"
+                                        data-column="{{ $column }}" data-item-id="{{ $item->id }}"
+                                        data-template="true">
+                                        <div class="d-flex justify-content-between align-items-center mb-2">
+                                            <strong class="text-primary">Item {{ $column }}</strong>
+                                            <button type="button" class="btn btn-sm btn-danger"
+                                                onclick="removeItem(event)">
+                                                <i class="fas fa-trash-alt"></i> Remove
+                                            </button>
+                                        </div>
+
+                                        @foreach ($columnInfo['fields'] as $dataKey => $fieldType)
+                                            <div class="mb-3">
+                                                <label class="form-label">{{ ucfirst($dataKey) }}</label>
+                                                @if ('text' == $fieldType)
+                                                    <input type="text" class="form-control"
+                                                        data-name="data[{{ $column }}][{{ $item->id }}][__KEY__][{{ $dataKey }}]"
+                                                        value="">
+                                                @elseif ('textarea' == $fieldType)
+                                                    <textarea class="form-control"
+                                                        data-name="data[{{ $column }}][{{ $item->id }}][__KEY__][{{ $dataKey }}]"></textarea>
+                                                @elseif ('editor' == $fieldType)
+                                                    <textarea class="form-control textarea" id="pc-tinymce"
+                                                        data-name="data[{{ $column }}][{{ $item->id }}][__KEY__][{{ $dataKey }}]"></textarea>
+                                                @endif
+                                            </div>
+                                        @endforeach
+                                    </div>
                                 </div>
-                                <div class="card-body"></div>
-                                <table class="table table-sm">
-                                    <thead>
-                                        <tr>
-                                            <th> Title </th>
-                                            @if ($column == 'programs')
-                                                <th> Body </th>
-                                            @endif
-                                            <th width="10%"> Action </th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="area-{{ $column }}-{{ $item->id }}">
-                                        @if (is_array($item->getTranslation($column, $language, false)))
-                                            @foreach ($item->getTranslation($column, $language, false) as $key => $data)
-                                                @php $id = $item->id . ($key + 1); @endphp
-                                                <tr id="{{ $column }}-{{ $id }}">
-                                                    <td>
-                                                        <input type="text"
-                                                            name="data[{{ $column }}][{{ $item->id }}][][title]"
-                                                            class="form-control form-control-sm" placeholder="Title"
-                                                            value="{{ $data['title'] ?? '' }}" required>
-                                                    </td>
-                                                    @if ($column == 'programs')
-                                                        <td>
-                                                            <textarea name="data[{{ $column }}][{{ $item->id }}][][body]" class="form-control textarea"
-                                                                placeholder="Body">{{ $data['body'] ?? '' }}</textarea>
-                                                        </td>
+
+
+
+                                @if (is_array($item->getTranslation($column, $language, false)))
+                                    @foreach ($item->getTranslation($column, $language, false) as $key => $data)
+                                        <div class="card array-container {{ $column }} mb-4 p-3 border shadow-sm"
+                                            data-column="{{ $column }}" data-item-id="{{ $item->id }}">
+                                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                                <strong class="text-primary">Item {{ $column }}</strong>
+                                                <button type="button" class="btn btn-sm btn-danger"
+                                                    onclick="removeItem(event)">
+                                                    <i class="fas fa-trash-alt"></i>
+                                                </button>
+                                            </div>
+
+                                            @foreach ($data as $dataKey => $dataItem)
+                                                <div class="mb-3">
+                                                    <label class="form-label">{{ ucfirst($dataKey) }}</label>
+                                                    @if ('text' == $columnInfo['fields'][$dataKey])
+                                                        <input type="text" class="form-control"
+                                                            name="data[{{ $column }}][{{ $item->id }}][{{ $key }}][{{ $dataKey }}]"
+                                                            value="{{ $dataItem }}">
+                                                    @elseif ('textarea' == $columnInfo['fields'][$dataKey])
+                                                        <textarea class="form-control"
+                                                            name="data[{{ $column }}][{{ $item->id }}][{{ $key }}][{{ $dataKey }}]">{{ $dataItem }}</textarea>
+                                                    @elseif ('editor' == $columnInfo['fields'][$dataKey])
+                                                        <textarea class="form-control textarea" id="pc-tinymce"
+                                                            name="data[{{ $column }}][{{ $item->id }}][{{ $key }}][{{ $dataKey }}]">{{ $dataItem }}</textarea>
                                                     @endif
-                                                    <td>
-                                                        <button type="button" class="btn btn-sm btn-link text-danger"
-                                                            onclick="removeItem('{{ $column }}', {{ $id }})">
-                                                            <i class="fas fa-trash fa-2x"></i>
-                                                        </button>
-                                                    </td>
-                                                </tr>
+                                                </div>
                                             @endforeach
-                                        @endif
-                                    </tbody>
-                                </table>
+                                        </div>
+                                    @endforeach
+                                @endif
                             </div>
                         @endif
                     @endforeach
@@ -154,53 +192,41 @@
 
     @section(config('h1ch4m_config.custom_javascript'))
         <script>
-            function addItem(itemId, column) {
-                let id = Date.now();
-                let area = document.getElementById(`area-${column}-${itemId}`);
+            function addItem(column) {
+                const wrapper = document.querySelector(`.array-wrapper.${column}`);
+                const template = document.querySelector(`[data-template="true"].${column}`);
+                if (!wrapper || !template) return;
 
-                let html = `<tr id="${column}-${id}">
-                            <td>
-                                <input type="text" name="data[${column}][${itemId}][][title]" class="form-control form-control-sm"
-                                    placeholder="Title" required>
-                            </td>`;
+                const clone = template.cloneNode(true);
+                const newKey = Date.now();
 
-                if (column === "programs") {
-                    html += `<td>
-                            <textarea name="data[${column}][${itemId}][][body]" class="form-control textarea"
-                                id="editor-${column}-${id}" placeholder="Body"></textarea>
-                        </td>`;
-                }
+                clone.removeAttribute('data-template');
+                clone.classList.remove('d-none');
+                clone.classList.add('new');
 
-                html += `<td>
-                        <button type="button" class="btn btn-sm btn-link text-danger"
-                            onclick="removeItem('${column}', ${id})">
-                            <i class="fas fa-trash fa-2x"></i>
-                        </button>
-                    </td>
-                </tr>`;
+                clone.querySelectorAll('input, textarea').forEach(input => {
+                    const dataName = input.getAttribute('data-name');
+                    if (!dataName) return;
 
-                area.insertAdjacentHTML("beforeend", html);
+                    const newName = dataName.replace('__KEY__', newKey);
+                    input.setAttribute('name', newName);
+                    input.removeAttribute('data-name');
+                    input.value = '';
+                });
 
-                if (column === "programs") {
-                    setTimeout(() => {
-                        tinymce.init({
-                            selector: `#editor-${column}-${id}`,
-                            height: 400,
-                            menubar: false,
-                            plugins: 'advlist autolink link image lists charmap print preview code',
-                            toolbar: [
-                                'styleselect fontselect fontsizeselect',
-                                'undo redo | cut copy paste | bold italic | link  | alignleft aligncenter alignright alignjustify',
-                                'bullist numlist | outdent indent | blockquote subscript superscript | advlist | autolink | lists | code'
-                            ],
-                            content_style: 'body { font-family: "Inter", sans-serif; }',
-                        });
-                    }, 100);
-                }
+
+                wrapper.appendChild(clone);
+
+                setTimeout(() => {
+                    clone.classList.remove('new');
+                }, 10);
             }
 
-            function removeItem(column, id) {
-                let row = document.getElementById(`${column}-${id}`);
+
+            function removeItem(event) {
+                event.preventDefault();
+
+                const row = event.target.closest('.array-container');
                 if (row) {
                     row.remove();
                 }

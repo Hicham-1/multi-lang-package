@@ -20,8 +20,7 @@ class MultiLanguageController extends Controller
             return redirect()->back()->withErrors(['error' => 'The model does not exist.']);
         }
 
-
-        $default_language = MultiLanguagesModel::firstWhere('is_default', true)->language ?? 'fr';
+        $default_language = getDefaultLanguage();
         $valid_languages = MultiLanguagesModel::where('is_default', false)->get(['language'])->pluck('language')->toArray();
 
 
@@ -60,12 +59,11 @@ class MultiLanguageController extends Controller
             return redirect()->back()->withErrors(['error' => 'The selected language is not valid.']);
         }
         $modelInstance = new $class_name();
-        $translatable = $modelInstance->getTranslatableAttributes();
-        $input_type = $modelInstance->input_type ?? 'text';
+        $translatableInputs = $modelInstance->translatableInputs;
 
         $item = $modelInstance::where('id', $id)->first();
 
-        $default_language = MultiLanguagesModel::firstWhere('is_default', true)->language ?? 'fr';
+        $default_language = getDefaultLanguage();
         $full_language = getActiveLanguages()[$language]['name'];
         $full_default_language = getActiveLanguages()[$default_language]['name'];
 
@@ -76,7 +74,7 @@ class MultiLanguageController extends Controller
             ->pluck('language')
             ->toArray();
 
-        return view('h1ch4m::multi-language.edit', compact('translatable', 'input_type', 'item', 'model_name', 'language', 'full_default_language', 'full_language', 'default_language', 'valid_languages'));
+        return view('h1ch4m::multi-language.edit', compact('translatableInputs', 'item', 'model_name', 'language', 'full_default_language', 'full_language', 'default_language', 'valid_languages'));
     }
 
     public function store(Request $request)
@@ -101,6 +99,8 @@ class MultiLanguageController extends Controller
         foreach ($data as $column => $values) {
             foreach ($values as $id => $value) {
                 $model = $model_instance->find($id);
+
+                $value = is_array($value) ? array_values($value) : $value;
 
                 if ($model) {
                     $model->setTranslation($column, $language, $value);

@@ -213,6 +213,8 @@ class AppServiceProvider extends ServiceProvider
 
 your Model should be look like this
 
+The types that we support are ```text```, ```editor```, ```textarea```, ```array```
+
 ```php
 <?php
 namespace App\Models;
@@ -224,8 +226,28 @@ class Program extends Model
 {
     use HasTranslations;
 
-    public $translatable = ['title', 'body', 'features'];
-    public $input_type = ['text', 'editor', 'array'];
+    public $translatable = ['title', 'body', 'features', 'characteristics'];
+    public $translatableInputs = [
+        'title' => [
+            'type' => 'text',
+        ],
+        'body' => [
+            'type' => 'editor',
+        ],
+        'features' => [
+            'type' => 'array',
+            'fields' => [
+                'title' => 'text',
+            ]
+        ],
+        'characteristics' => [
+            'type' => 'array',
+            'fields' => [
+                'title' => 'text',
+                'value' => 'text',
+            ]
+        ],
+    ];
     public $custom_name = 'Program';
     public $default_title = 'title';
 
@@ -240,6 +262,7 @@ class Program extends Model
         'title',
         'body',
         'features',
+        'characteristics',
         'is_active',
         'is_pinned'
     ];
