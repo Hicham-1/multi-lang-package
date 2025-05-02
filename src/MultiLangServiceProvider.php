@@ -27,7 +27,6 @@ class MultiLangServiceProvider extends ServiceProvider
 
         // Allow publishing config files
         $this->publishes([
-            __DIR__ . '/config/h1ch4m_multi_languages.php' => config_path('h1ch4m_multi_languages.php'),
             __DIR__ . '/config/h1ch4m_languages.php' => config_path('h1ch4m_languages.php'),
             __DIR__ . '/config/h1ch4m_config.php' => config_path('h1ch4m_config.php'),
         ], 'config');
@@ -59,11 +58,6 @@ class MultiLangServiceProvider extends ServiceProvider
     public function register()
     {
         // Merge default config so package works without publishing
-        $this->mergeConfigFrom(
-            __DIR__ . '/config/h1ch4m_multi_languages.php',
-            'h1ch4m_multi_languages'
-        );
-
         $this->mergeConfigFrom(
             __DIR__ . '/config/h1ch4m_languages.php',
             'h1ch4m_languages'

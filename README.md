@@ -115,8 +115,6 @@ return [
 ];
 ```
 
-<!-- 3. ```h1ch4m_multi_languages.php``` - Package configuration -->
-
 # Advanced Usage 🔧
 ## Custom route
 ### if you published the routes
