@@ -25,6 +25,7 @@ A multi language solution for Laravel applications with database-driven translat
     - [if you want to use package routes](#if-you-want-to-use-package-routes)
 - [Helpers 🧰](#helpers-)
   - [Available helper functions](#available-helper-functions)
+- [Navigation](#navigation)
 
 # Features ✨
 
@@ -136,4 +137,25 @@ Route::group(['prefix' => 'panel', 'as' => 'panel.'], function () {
 ```php
 // Get active languages
 getActiveLanguages()
+```
+# Navigation
+
+```html
+    <li class="pc-item">
+        <a href="{{ route('panel.languages.models') }}" class="pc-link">
+            <span class="pc-micon">
+                <i data-feather="globe"></i>
+            </span>
+            <span class="pc-mtext"> {{ __('Translation') }} </span>
+        </a>
+    </li>
+
+    <li class="pc-item">
+        <a href="{{ route('panel.languages.setting') }}" class="pc-link">
+            <span class="pc-micon">
+                <i data-feather="globe"></i>
+            </span>
+            <span class="pc-mtext"> {{ __('ML Setting') }} </span>
+        </a>
+    </li>
 ```
