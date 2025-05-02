@@ -21,6 +21,8 @@ A multi language solution for Laravel applications with database-driven translat
   - [Config Files](#config-files-1)
 - [Advanced Usage 🔧](#advanced-usage-)
   - [Custom route](#custom-route)
+    - [if you published the routes](#if-you-published-the-routes)
+    - [if you want to use package routes](#if-you-want-to-use-package-routes)
 - [Helpers 🧰](#helpers-)
   - [Available helper functions](#available-helper-functions)
 
@@ -115,10 +117,16 @@ return [
 
 # Advanced Usage 🔧
 ## Custom route
-
+### if you published the routes
 ```php
 Route::group(['prefix' => 'panel', 'as' => 'panels.'], function () {
-    include base_path('routes/vendor/h1ch4m_multi_lang.php');
+    require base_path('routes/vendor/h1ch4m_multi_lang.php');
+});
+```
+### if you want to use package routes
+```php
+Route::group(['prefix' => 'panel', 'as' => 'panels.'], function () {
+    require base_path('vendor/h1ch4m/multi-lang/src/routes/web.php');
 });
 ```
 
