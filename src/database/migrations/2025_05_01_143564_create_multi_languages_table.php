@@ -11,6 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
+        if (Schema::hasTable('multi_languages')) {
+            echo "⛔ Table 'multi_languages' already exists. Skipping migration.\n";
+            return;
+        }
+
         Schema::create('multi_languages', function (Blueprint $table) {
             $table->id();
             $table->string('language', 4);

@@ -26,6 +26,7 @@ A multi language solution for Laravel applications with database-driven translat
 - [Helpers 🧰](#helpers-)
   - [Available helper functions](#available-helper-functions)
 - [Navigation](#navigation)
+- [Middleware](#middleware)
 
 # Features ✨
 
@@ -156,4 +157,12 @@ getActiveLanguages()
             <span class="pc-mtext"> {{ __('ML Setting') }} </span>
         </a>
     </li>
+```
+# Middleware
+
+in your frontend (Store, Blog...) use this middleware ```'h1ch4m_middleware'```
+```php
+Route::middleware(['h1ch4m_middleware'])->group(function () {
+    Route::get('/your-path', [YourBlogController::class, 'method']);
+});
 ```
