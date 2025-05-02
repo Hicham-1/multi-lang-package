@@ -43,6 +43,7 @@ A multi language solution for Laravel applications with database-driven translat
 
 - PHP 8.0+
 - Laravel 9.x or later
+- spatie/laravel-translatable 6.6 or later
 - Composer
 - Database (MySQL)
 
