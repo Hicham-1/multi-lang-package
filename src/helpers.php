@@ -3,7 +3,7 @@
 if (!function_exists('getActiveLanguages')) {
     function getActiveLanguages()
     {
-        $languages = config('languages');
+        $languages = config('h1ch4m_languages');
 
         // Filter active languages
         $activeLanguages = array_filter($languages, function ($lang) {
