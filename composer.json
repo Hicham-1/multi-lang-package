@@ -1,12 +1,14 @@
 {
     "name": "h1ch4m/multi-lang",
-    "description": "laravel multi language manager",
+    "description": "A multi language solution for Laravel applications with database-driven translations, automatic language detection.",
     "type": "library",
     "license": "MIT",
     "minimum-stability": "dev",
     "prefer-stable": true,
     "require": {
-        "h1ch4m/multi-lang": "dev-main"
+        "php": "^8.0",
+        "illuminate/support": "^8.0|^9.0|^10.0",
+        "spatie/laravel-translatable": "^6.6"
     },
     "autoload": {
         "psr-4": {

@@ -4,7 +4,7 @@
 [![Total Downloads](https://img.shields.io/packagist/dt/h1ch4m/multi-lang.svg?style=flat-square)](https://packagist.org/packages/h1ch4m/multi-lang)
 [![License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE.md)
 
-A robust multilingual solution for Laravel applications with database-driven translations, automatic language detection.
+A multi language solution for Laravel applications with database-driven translations, automatic language detection.
 
 # Table of Contents
 
