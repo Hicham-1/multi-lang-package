@@ -6,9 +6,9 @@
     "minimum-stability": "dev",
     "prefer-stable": true,
     "require": {
-        "php": "^8.0",
-        "illuminate/support": "^8.0|^9.0|^10.0",
-        "spatie/laravel-translatable": "^6.6"
+        "php": ">=8.0",
+        "illuminate/support": ">=8.0",
+        "spatie/laravel-translatable": ">=6.6"
     },
     "autoload": {
         "psr-4": {
