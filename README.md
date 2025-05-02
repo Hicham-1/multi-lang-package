@@ -119,13 +119,13 @@ return [
 ## Custom route
 ### if you published the routes
 ```php
-Route::group(['prefix' => 'panel', 'as' => 'panels.'], function () {
+Route::group(['prefix' => 'panel', 'as' => 'panel.'], function () {
     require base_path('routes/vendor/h1ch4m_multi_lang.php');
 });
 ```
 ### if you want to use package routes
 ```php
-Route::group(['prefix' => 'panel', 'as' => 'panels.'], function () {
+Route::group(['prefix' => 'panel', 'as' => 'panel.'], function () {
     require base_path('vendor/h1ch4m/multi-lang/src/routes/web.php');
 });
 ```
