@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
@@ -22,6 +23,13 @@ return new class extends Migration
             $table->boolean('is_default')->default(false);
             $table->timestamps();
         });
+
+        $nowDate = now();
+        // Insert initial data
+        DB::table('multi_languages')->insert([
+            ['language' => 'en', 'is_default' => true, 'created_at' => $nowDate, 'updated_at' => $nowDate],
+            ['language' => 'fr', 'is_default' => false, 'created_at' => $nowDate, 'updated_at' => $nowDate],
+        ]);
     }
 
     /**
