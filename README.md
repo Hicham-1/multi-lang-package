@@ -226,6 +226,12 @@ class Program extends Model
 {
     use HasTranslations;
 
+    public function __construct(array $attributes = [])
+    {
+        parent::__construct($attributes);
+        $this->setLocale(getOrSetCachedLocale());
+    }
+
     public $translatable = ['title', 'body', 'features', 'characteristics'];
     public $translatableInputs = [
         'title' => [
