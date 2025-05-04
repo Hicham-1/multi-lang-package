@@ -29,6 +29,7 @@ return new class extends Migration
         DB::table('multi_languages')->insert([
             ['language' => 'en', 'is_default' => true, 'created_at' => $nowDate, 'updated_at' => $nowDate],
             ['language' => 'fr', 'is_default' => false, 'created_at' => $nowDate, 'updated_at' => $nowDate],
+            ['language' => 'ar', 'is_default' => false, 'created_at' => $nowDate, 'updated_at' => $nowDate],
         ]);
     }
 

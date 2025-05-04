@@ -1,9 +1,18 @@
 @if (config('h1ch4m_config.layout'))
     @extends(config('h1ch4m_config.layout'))
 
-    @section('title', $model_instance->custom_name . __(' Translate'))
+    {{-- @section('title', $model_instance->custom_name . __(' Translate')) --}}
 
     @section(config('h1ch4m_config.custom_content'))
+        <div class="d-flex align-items-center mb-3">
+            <a class="btn btn-primary me-3" href="{{ route(config('h1ch4m_config.custom_route') . 'languages.models') }}">
+                {{ __('Go back') }}
+            </a>
+            <h2 class="m-0">
+                {{ $model_instance->custom_name . __(' Translate') }}
+            </h2>
+        </div>
+
         <table class="table">
             <thead>
                 <tr>
@@ -72,10 +81,8 @@
                 </tbody>
             @endif
         </table>
-
     @endsection
 
     @section(config('h1ch4m_config.custom_javascript'))
-
     @endsection
 @endif

@@ -26,9 +26,15 @@
             <tbody>
                 <tr>
                     <td>
-                        <h2>
-                            {{ $item->getTranslation($item->default_title, $default_language) }}
-                        </h2>
+                        <div class="d-flex align-items-center">
+                            <a class="btn btn-primary me-3"
+                                href="{{ route(config('h1ch4m_config.custom_route') . 'languages.records', ['model' => $model_name]) }}">
+                                {{ __('Go back') }}
+                            </a>
+                            <h2 class="m-0">
+                                {{ $item->getTranslation($item->default_title, $default_language) }}
+                            </h2>
+                        </div>
                     </td>
                     <td>
                         <div class="d-flex justify-content-end">
