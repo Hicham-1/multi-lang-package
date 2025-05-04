@@ -31,6 +31,7 @@ class MultiLanguageController extends Controller
         if ($model_instance->parent_method) {
             $parent_method = $model_instance->parent_method;
             $data = $model_instance::latest()
+                ->whereHas($parent_method)
                 ->with([$parent_method])
                 ->get()
                 ->groupBy(function ($item) use ($default_language, $parent_method) {
