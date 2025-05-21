@@ -20,8 +20,7 @@ class FrontLanguage
      */
     public function handle(Request $request, Closure $next)
     {
-        $default_language = Cache::get('app_locale');
-        App::setFallbackLocale($default_language);
+        App::setFallbackLocale(getDefaultLanguage());
 
 
         $lang = $request->route('lang') ?? config('app.locale');
@@ -33,6 +32,8 @@ class FrontLanguage
         App::setlocale($lang);
         $request->route()->forgetParameter('lang');
         URL::defaults(['lang' => $lang]);
+
+        getOrSetCachedLocale($lang);
 
         return $next($request);
     }

@@ -40,9 +40,9 @@ if (!function_exists('getActiveLanguages')) {
 if (!function_exists('getDefaultLanguage')) {
     function getDefaultLanguage(): string
     {
-        $default_language = Cache::get('app_locale') ?? MultiLanguagesModel::firstWhere('is_default', true)->language ?? config('app.locale');
-
-        return $default_language;
+        return Cache::rememberForever('default_language', function () {
+            return MultiLanguagesModel::firstWhere('is_default', true)->language ?? config('app.locale');
+        });
     }
 }
 
