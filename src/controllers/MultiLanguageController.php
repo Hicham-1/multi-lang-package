@@ -169,6 +169,10 @@ class MultiLanguageController extends Controller
                 ['language' => $language],
                 ['is_default' => $is_default]
             );
+
+            if ($is_default) {
+                getOrSetCachedLocale($language);
+            }
         }
 
         return redirect()->back();

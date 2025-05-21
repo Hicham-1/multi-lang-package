@@ -48,15 +48,13 @@ if (!function_exists('getDefaultLanguage')) {
 
 
 if (!function_exists('getOrSetCachedLocale')) {
-    function getOrSetCachedLocale($localeLang = null): string
+    function getOrSetCachedLocale(?string $localeLang = null): string
     {
-        $locale = Cache::get('app_locale');
-
-        if (!$locale || $localeLang) {
-            $locale =  $localeLang ?? $locale ?? getDefaultLanguage();
-            Cache::forever('app_locale', $locale);
+        if ($localeLang) {
+            Cache::forever('app_locale', $localeLang);
+            return $localeLang;
         }
 
-        return $locale;
+        return Cache::rememberForever('app_locale', fn() => getDefaultLanguage());
     }
 }
