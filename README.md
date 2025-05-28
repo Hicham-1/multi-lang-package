@@ -232,10 +232,15 @@ class Program extends Model
         $this->setLocale(getOrSetCachedLocale());
     }
 
-    public $translatable = ['title', 'body', 'features', 'characteristics'];
+    // spatie attribute
+    public $translatable = ['title', 'body', 'short', 'features', 'characteristics'];
+
     public $translatableInputs = [
         'title' => [
             'type' => 'text',
+        ],
+        'short' => [
+            'type' => 'textarea',
         ],
         'body' => [
             'type' => 'editor',
