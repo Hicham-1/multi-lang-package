@@ -149,8 +149,12 @@ Route::group(['prefix' => 'panel', 'as' => 'panel.'], function () {
 # 🧰 Helpers
 ## Available helper functions
 ```php
-// Get active languages
+// Get active languages from config
 getActiveLanguages(): array
+
+// Get languages saved in database (we use Cache)
+// we use $refresh just to refresh data when languages changed (you can use just $params)
+getSavedLanguages($params = ['*'], $refresh = false): array
 
 // Get default language
 getDefaultLanguage(): string
