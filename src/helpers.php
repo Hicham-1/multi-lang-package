@@ -38,17 +38,23 @@ if (!function_exists('getActiveLanguages')) {
 
 
 if (!function_exists('getSavedLanguages')) {
-    function getSavedLanguages($params = ['*'], $refresh = false): array
+    function getSavedLanguages($params = ['*'], $refresh = false, $justKeys = true): array
     {
         if ($refresh) {
             Cache::forget('saved_languages');
         }
 
-        return Cache::rememberForever('saved_languages', function () use ($params) {
+        $savedLanguages = Cache::rememberForever('saved_languages', function () use ($params) {
             return MultiLanguagesModel::get($params)
                 ->keyBy('language')
                 ->toArray();
         });
+
+        if ($justKeys) {
+            return array_keys($savedLanguages);
+        }
+
+        return $savedLanguages;
     }
 }
 

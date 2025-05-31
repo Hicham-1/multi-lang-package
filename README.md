@@ -154,7 +154,8 @@ getActiveLanguages(): array
 
 // Get languages saved in database (we use Cache)
 // we use $refresh just to refresh data when languages changed (you can use just $params)
-getSavedLanguages($params = ['*'], $refresh = false): array
+// $justKeys, true if you want just array of saved languages ['ar', 'en', 'fr']
+getSavedLanguages($params = ['*'], $refresh = false, $justKeys = true): array
 
 // Get default language
 getDefaultLanguage(): string
