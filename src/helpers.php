@@ -78,7 +78,6 @@ if (!function_exists('getOrSetCachedLocale')) {
 
         if ($localeLang) {
             Cache::forever($cacheKey, $localeLang);
-            getDefaultLanguage(true);
             return $localeLang;
         }
 

@@ -207,7 +207,7 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         if (Request::is('panel/*')) {
-            Config::set('app.locale', getOrSetCachedLocale());
+            getOrSetCachedLocale(getDefaultLanguage());
         }
     }
 }
