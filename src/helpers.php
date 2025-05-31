@@ -54,8 +54,12 @@ if (!function_exists('getSavedLanguages')) {
 
 
 if (!function_exists('getDefaultLanguage')) {
-    function getDefaultLanguage(): string
+    function getDefaultLanguage($refresh = false): string
     {
+        if ($refresh) {
+            Cache::forget('default_language');
+        }
+
         return Cache::rememberForever('default_language', function () {
             return MultiLanguagesModel::firstWhere('is_default', true)->language ?? config('app.locale');
         });
@@ -64,13 +68,20 @@ if (!function_exists('getDefaultLanguage')) {
 
 
 if (!function_exists('getOrSetCachedLocale')) {
-    function getOrSetCachedLocale(?string $localeLang = null): string
+    function getOrSetCachedLocale(?string $localeLang = null, $refresh = false): string
     {
+        $cacheKey = 'app_locale';
+
+        if ($refresh) {
+            Cache::forget($cacheKey);
+        }
+
         if ($localeLang) {
-            Cache::forever('app_locale', $localeLang);
+            Cache::forever($cacheKey, $localeLang);
+            getDefaultLanguage(true);
             return $localeLang;
         }
 
-        return Cache::rememberForever('app_locale', fn() => getDefaultLanguage());
+        return Cache::rememberForever($cacheKey, fn() => getDefaultLanguage($refresh));
     }
 }

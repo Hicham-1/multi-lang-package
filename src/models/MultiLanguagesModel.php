@@ -16,10 +16,14 @@ class MultiLanguagesModel extends Model
     {
         static::saved(function () {
             getSavedLanguages(refresh: true);
+            getOrSetCachedLocale(refresh: true);
+            getDefaultLanguage(refresh: true);
         });
 
         static::deleted(function () {
             getSavedLanguages(refresh: true);
+            getOrSetCachedLocale(refresh: true);
+            getDefaultLanguage(refresh: true);
         });
     }
 }

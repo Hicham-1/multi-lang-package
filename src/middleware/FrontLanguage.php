@@ -20,10 +20,9 @@ class FrontLanguage
      */
     public function handle(Request $request, Closure $next)
     {
-        App::setFallbackLocale(getDefaultLanguage());
+        App::setFallbackLocale(config('app.fallback_locale'));
 
-
-        $lang = $request->route('lang') ?? config('app.locale');
+        $lang = $request->route('lang') ?? getOrSetCachedLocale() ?? config('app.locale');
 
         if (! array_key_exists($lang, getActiveLanguages())) {
             $lang = config('app.locale');
