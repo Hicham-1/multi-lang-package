@@ -117,11 +117,18 @@ class MultiLanguageController extends Controller
 
     public function models()
     {
-        $modelsPath = app_path('Models');
+        $modelsPath = config('h1ch4m_config.models_path');
         $models = [];
 
+        $files = [];
+        foreach ($modelsPath as $path) {
+            $path = app_path($path);
+            if (File::exists($path)) {
+                $files = array_merge($files, File::files($path));
+            }
+        }
 
-        foreach (File::files($modelsPath) as $file) {
+        foreach ($files as $file) {
             $model_name = Str::before($file->getFilename(), '.php');
             $class_name = 'App\\Models\\' . $model_name;
             if (in_array(HasTranslations::class, class_uses($class_name))) {
