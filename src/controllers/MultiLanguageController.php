@@ -121,7 +121,7 @@ class MultiLanguageController extends Controller
         $models = [];
 
 
-        foreach (File::allFiles($modelsPath) as $file) {
+        foreach (File::files($modelsPath) as $file) {
             $model_name = Str::before($file->getFilename(), '.php');
             $class_name = 'App\\Models\\' . $model_name;
             if (in_array(HasTranslations::class, class_uses($class_name))) {
